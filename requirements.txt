@@ -1,0 +1,5 @@
+Flask
+flask-cors
+google-generativeai
+line-bot-sdk
+requests
