@@ -2,15 +2,12 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/app.py",
-      "use": "@vercel/python",
-      "config": {
-        "runtime": "python3.9"
-      }
+      "src": "app.py",
+      "use": "@vercel/python"
     }
   ],
   "routes": [
-    { "src": "/line_webhook", "dest": "api/app.py" },
-    { "src": "/(.*)", "dest": "api/app.py" }
+    { "src": "/line_webhook", "dest": "app.py" },
+    { "src": "/(.*)", "dest": "app.py" }
   ]
 }
