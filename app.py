@@ -202,10 +202,18 @@ def line_webhook():
 
 @webhook_handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    """メッセージイベントを受け取り、あだおかAIの返答を返信"""
-
-    # ユーザー or グループ or ルーム からのメッセージか判別
     source_type = event.source.type
+    user_text   = event.message.text
+
+    # グループ or ルーム ではメンションされているか判定（Bot名を含むか）
+    if source_type in ["group", "room"]:
+        # 表示名を環境変数から取得（なければ "あだT"）
+        bot_display_name = os.getenv("BOT_MENTION_NAME", "あだT")
+        if bot_display_name not in user_text:
+            # Botの名前が含まれていない＝メンションされてないとみなして無視
+            return
+
+    # 誰からの発言か（履歴管理用のID）
     if source_type == "user":
         source_id = event.source.user_id
     elif source_type == "group":
@@ -215,9 +223,10 @@ def handle_message(event):
     else:
         source_id = "unknown"
 
-    user_text = event.message.text
+    # あだおかに問い合わせ
     reply_text = chat_with_adoka(user_text, version="2.0", user_id=source_id)
 
+    # LINEに返答
     line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text=reply_text)
