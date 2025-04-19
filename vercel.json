@@ -8,6 +8,6 @@
   ],
   "routes": [
     { "src": "/line_webhook", "dest": "app.py" },
-    { "src": "/(.*)", "dest": "app.py" }
+    { "src": "/(.*)",        "dest": "app.py" }
   ]
 }
