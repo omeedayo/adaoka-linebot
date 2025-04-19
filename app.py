@@ -203,17 +203,15 @@ def line_webhook():
 @webhook_handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     source_type = event.source.type
+    user_text = event.message.text
 
-    # グループ or ルーム の場合はメンションがあるか確認
+    # グループ or 複数人トークでは名前を含まないと無視
     if source_type in ["group", "room"]:
-        message_text = event.message.text
-        bot_id = os.getenv("BOT_MENTION_NAME", "@あだT")  # メンション名を環境変数で管理してもOK
-
-        if bot_id not in message_text:
-            # メンションされてないなら無視
+        display_name = os.getenv("BOT_DISPLAY_NAME", "あだT")
+        if display_name not in user_text:
             return
 
-    # 誰からの発言か（履歴キーとして使う）
+    # 履歴管理ID
     if source_type == "user":
         source_id = event.source.user_id
     elif source_type == "group":
@@ -223,13 +221,12 @@ def handle_message(event):
     else:
         source_id = "unknown"
 
-    user_text = event.message.text
     reply_text = chat_with_adoka(user_text, version="2.0", user_id=source_id)
-
     line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text=reply_text)
     )
+
 
 @app.route("/")
 def home():
