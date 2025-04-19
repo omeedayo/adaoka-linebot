@@ -202,10 +202,18 @@ def line_webhook():
 
 @webhook_handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    """メッセージイベントを受け取り、あだおかAIの返答を返信"""
-
-    # ユーザー or グループ or ルーム からのメッセージか判別
     source_type = event.source.type
+
+    # グループ or ルーム の場合はメンションがあるか確認
+    if source_type in ["group", "room"]:
+        message_text = event.message.text
+        bot_id = os.getenv("BOT_MENTION_NAME", "@あだT")  # メンション名を環境変数で管理してもOK
+
+        if bot_id not in message_text:
+            # メンションされてないなら無視
+            return
+
+    # 誰からの発言か（履歴キーとして使う）
     if source_type == "user":
         source_id = event.source.user_id
     elif source_type == "group":
