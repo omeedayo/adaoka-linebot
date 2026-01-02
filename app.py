@@ -108,7 +108,7 @@ INFPがあたおか（頭おかしい）と言われることが、キャラク�
 
 ユーザーの発言に短く返答してください：
 """
-        model_name = "gemini-1.5-pro"
+        model_name = "gemini-2.5-pro"
     else:
         prompt = f"""
 【キャラクター設定】
@@ -190,7 +190,7 @@ INFPがあたおか（頭おかしい）と言われることが、キャラク�
 
 ユーザーの発言に短く返答してください：
 """
-        model_name = "gemini-2.0-flash"
+        model_name = "gemini-3-flash-preview"
 
     try:
         model    = genai.GenerativeModel(model_name)
@@ -250,3 +250,4 @@ def handle_message(event):
 @app.route("/")
 def home():
     return "あだおか LINE Bot is running!"
+
